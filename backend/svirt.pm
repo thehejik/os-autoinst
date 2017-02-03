@@ -49,6 +49,7 @@ sub do_start_vm {
         {
             hostname => get_required_var('VIRSH_HOSTNAME'),
             password => get_var('VIRSH_PASSWORD'),
+            username => get_var('VIRSH_USERNAME') || 'root',
         });
 
     $ssh->backend($self);
@@ -79,7 +80,7 @@ sub run_cmd {
     $self->{ssh} = $self->new_ssh_connection(
         hostname => get_required_var('VIRSH_HOSTNAME'),
         password => get_var('VIRSH_PASSWORD'),
-        username => 'root'
+        username => get_var('VIRSH_USERNAME') || 'root',
     );
     my $chan = $self->{ssh}->channel();
     $chan->exec($cmd);
@@ -135,7 +136,7 @@ sub load_snapshot {
 sub start_serial_grab {
     my ($self, $name) = @_;
 
-    my $chan = $self->start_ssh_serial(hostname => get_required_var('VIRSH_HOSTNAME'), password => get_var('VIRSH_PASSWORD'), username => 'root');
+    my $chan = $self->start_ssh_serial(hostname => get_required_var('VIRSH_HOSTNAME'), password => get_var('VIRSH_PASSWORD'), username => (get_var('VIRSH_USERNAME') || 'root'));
     if (check_var('VIRSH_VMM_FAMILY', 'vmware')) {
         # libvirt esx driver does not support `virsh console', so
         # we have to connect to VM's serial port via TCP which is
