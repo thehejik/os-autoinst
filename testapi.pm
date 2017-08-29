@@ -36,7 +36,7 @@ require bmwqemu;
 
 our @EXPORT = qw($realname $username $password $serialdev %cmd %vars
 
-  get_var get_required_var check_var set_var get_var_array check_var_array autoinst_url
+  get_var get_required_var check_var set_var del_var get_var_array check_var_array autoinst_url
 
   send_key send_key_until_needlematch type_string type_password
   hold_key release_key
@@ -626,6 +626,21 @@ sub check_var {
     my ($var, $val) = @_;
     return 1 if (defined $bmwqemu::vars{$var} && $bmwqemu::vars{$var} eq $val);
     return 0;
+}
+
+=head2 del_var
+
+  del_var($variable);
+
+Delete variable C<$variable>.
+
+=cut
+
+sub del_var {
+    my ($var) = @_;
+    return 0 if (!defined $bmwqemu::vars{$var});
+    delete $bmwqemu::vars{$var};
+    return;
 }
 
 =head2 get_var_array
